@@ -29,10 +29,11 @@ object Pipe extends App {
 
   // 5. Init the streams client and start it
   val streams = new KafkaStreams(topology, Util.kafkaStreamsProps(appId))
-  println("Starting kafka stream ...")
-  streams.start()
 
   // The program will run until it is aborted.
   // Execute a shutdown hook to close the stream before shutting down the app.
   sys.addShutdownHook(() => Util.closeStream(streams))
+
+  println("Starting kafka stream ...")
+  streams.start()
 }

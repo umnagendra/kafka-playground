@@ -16,7 +16,7 @@ object Util {
   }
 
   def closeStream(streams: KafkaStreams): Unit = {
-    println(s"Executing shutdown hook... closing kafka stream")
+    println("Executing shutdown hook... closing kafka stream")
     streams.close()
   }
 }
