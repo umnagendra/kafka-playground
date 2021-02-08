@@ -7,6 +7,7 @@ import org.apache.kafka.streams.{KafkaStreams, Topology}
 
 object Pipe extends App {
 
+  val appId = "streams-pipe"
   val inputTopic = "streams-plaintext-input"
   val outputTopic = "streams-pipe-output"
 
@@ -27,7 +28,7 @@ object Pipe extends App {
   println(s"Topology is: ${topology.describe()}")
 
   // 5. Init the streams client and start it
-  val streams = new KafkaStreams(topology, Util.kafkaStreamsProps)
+  val streams = new KafkaStreams(topology, Util.kafkaStreamsProps(appId))
   println("Starting kafka stream ...")
   streams.start()
 
