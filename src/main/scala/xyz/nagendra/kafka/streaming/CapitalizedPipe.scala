@@ -5,28 +5,33 @@ import com.lightbend.kafka.scala.streams.ImplicitConversions.{consumedFromSerde,
 import com.lightbend.kafka.scala.streams.StreamsBuilderS
 import org.apache.kafka.streams.{KafkaStreams, Topology}
 
-object CapitalizedPipe extends App {
+object CapitalizedPipe extends App with TopologyDefinition {
 
   val appId = "streams-capitalized-pipe"
   val inputTopic = "streams-plaintext-input"
   val outputTopic = "streams-pipe-output"
 
-  // 1. Get the streams builder
-  val builder = new StreamsBuilderS()
+  override def createTopology() = {
+    // 1. Get the streams builder
+    val builder = new StreamsBuilderS()
 
-  // 2. Create a source stream from the input topic
-  //    The source stream is a `KStreamS` that is generating records from its source kafka topic (inputTopic)
-  //    The records are organized as (String, String) key-value pairs
-  val source = builder.stream[String, String](inputTopic)
+    // 2. Create a source stream from the input topic
+    //    The source stream is a `KStreamS` that is generating records from its source kafka topic (inputTopic)
+    //    The records are organized as (String, String) key-value pairs
+    val source = builder.stream[String, String](inputTopic)
 
-  // 3. Simply pipe the contents from input topic, transform all text to UPPERCASE, and then to the output topic
-  source.mapValues(value => value.toUpperCase).to(outputTopic)
+    // 3. Simply pipe the contents from input topic, transform all text to UPPERCASE, and then to the output topic
+    source.mapValues(value => value.toUpperCase).to(outputTopic)
 
-  // 4. Examine the topology created above
-  val topology: Topology = builder.build()
+    // 4. Build the topology
+    builder.build()
+  }
+
+  // Examine the topology created above
+  val topology: Topology = createTopology()
   println(s"Topology is: ${topology.describe()}")
 
-  // 5. Init the streams client and start it
+  // Init the streams client and start it
   val streams = new KafkaStreams(topology, Util.kafkaStreamsProps(appId))
 
   // The program will run until it is aborted.
