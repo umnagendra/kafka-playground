@@ -1,11 +1,12 @@
 package xyz.nagendra.kafka.streaming
 
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
+import org.apache.kafka.streams.{ KafkaStreams, StreamsConfig }
 
 import java.util.Properties
 
 object Util {
+
   def kafkaStreamsProps(appId: String): Properties = {
     val props: Properties = new Properties()
     props.put(StreamsConfig.APPLICATION_ID_CONFIG, appId)

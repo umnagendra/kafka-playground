@@ -1,16 +1,22 @@
 package xyz.nagendra.kafka.streaming
 
 import com.lightbend.kafka.scala.streams.DefaultSerdes.stringSerde
-import com.lightbend.kafka.scala.streams.ImplicitConversions.{consumedFromSerde, producedFromSerde}
+import com.lightbend.kafka.scala.streams.ImplicitConversions.{ consumedFromSerde, producedFromSerde }
 import com.lightbend.kafka.scala.streams.StreamsBuilderS
-import org.apache.kafka.streams.{KafkaStreams, Topology}
+import org.apache.kafka.streams.{ KafkaStreams, Topology }
 
 object LineSplit extends App with TopologyDefinition {
 
-  val appId = "streams-line-split"
-  val inputTopic = "streams-plaintext-input"
+  val appId       = "streams-line-split"
+  val inputTopic  = "streams-plaintext-input"
   val outputTopic = "streams-words"
 
+  // Examine the topology created above
+  val topology: Topology = createTopology()
+
+  // Init the streams client and start it
+  val streams = new KafkaStreams(topology, Util.kafkaStreamsProps(appId))
+  println(s"Topology is: ${topology.describe()}")
 
   override def createTopology() = {
     // 1. Get the streams builder
@@ -27,13 +33,6 @@ object LineSplit extends App with TopologyDefinition {
     // 4. Build the topology
     builder.build()
   }
-
-  // Examine the topology created above
-  val topology: Topology = createTopology()
-  println(s"Topology is: ${topology.describe()}")
-
-  // Init the streams client and start it
-  val streams = new KafkaStreams(topology, Util.kafkaStreamsProps(appId))
 
   // The program will run until it is aborted.
   // Execute a shutdown hook to close the stream before shutting down the app.

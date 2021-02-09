@@ -1,15 +1,22 @@
 package xyz.nagendra.kafka.streaming
 
 import com.lightbend.kafka.scala.streams.DefaultSerdes.stringSerde
-import com.lightbend.kafka.scala.streams.ImplicitConversions.{consumedFromSerde, producedFromSerde}
+import com.lightbend.kafka.scala.streams.ImplicitConversions.{ consumedFromSerde, producedFromSerde }
 import com.lightbend.kafka.scala.streams.StreamsBuilderS
-import org.apache.kafka.streams.{KafkaStreams, Topology}
+import org.apache.kafka.streams.{ KafkaStreams, Topology }
 
 object Pipe extends App with TopologyDefinition {
 
-  val appId = "streams-pipe"
-  val inputTopic = "streams-plaintext-input"
+  val appId       = "streams-pipe"
+  val inputTopic  = "streams-plaintext-input"
   val outputTopic = "streams-pipe-output"
+
+  // Create and describe topology
+  val topology: Topology = createTopology()
+
+  // Init the streams client and start it
+  val streams = new KafkaStreams(topology, Util.kafkaStreamsProps(appId))
+  println(s"Topology is: ${topology.describe()}")
 
   override def createTopology() = {
     // 1. Get the streams builder
@@ -27,13 +34,6 @@ object Pipe extends App with TopologyDefinition {
     // 4. Build the topology
     builder.build()
   }
-
-  // Create and describe topology
-  val topology: Topology = createTopology()
-  println(s"Topology is: ${topology.describe()}")
-
-  // Init the streams client and start it
-  val streams = new KafkaStreams(topology, Util.kafkaStreamsProps(appId))
 
   // The program will run until it is aborted.
   // Execute a shutdown hook to close the stream before shutting down the app.
