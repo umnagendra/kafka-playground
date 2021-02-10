@@ -33,6 +33,15 @@ object WordCount extends App with TopologyDefinition {
     //    The records are organized as (String, String) key-value pairs
     val source = builder.stream[String, String](inputTopic)
 
+    /**
+     * NOTES on Concurrency
+     * --------------------
+     * Processing a partition will always be done by a single "stream task thread" per topic partition
+     * (unless the property 'num.stream.threads' is overridden) which ensures we are not running into
+     * concurrency issues and ensures all events in a topic partition are processed in order.
+     *
+     * Ref. https://stackoverflow.com/questions/39985048/kafka-streaming-concurrency
+     */
     source
       // 3.1 Lowercase each event entirely
       .mapValues(value => value.toLowerCase)
