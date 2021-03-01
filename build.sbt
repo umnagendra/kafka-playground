@@ -2,7 +2,9 @@ name := "kafka-playground"
 version := "0.1"
 
 libraryDependencies ++= Seq(
-  "org.apache.kafka" % "kafka-streams-scala_2.12" % "2.7.0" % "compile"
+  "org.apache.kafka" % "kafka-streams-scala_2.12" % "2.7.0" % "compile",
+  "org.scalatest"   %% "scalatest"                % "3.2.5" % Test,
+  "org.apache.kafka" % "kafka-streams-test-utils" % "2.7.0" % Test
 )
 
 ////////////////////////////////
