@@ -1,14 +1,10 @@
 package xyz.nagendra.kafka.streaming
 
-import com.lightbend.kafka.scala.streams.DefaultSerdes.{ longSerde, stringSerde }
-import com.lightbend.kafka.scala.streams.ImplicitConversions.{
-  consumedFromSerde,
-  producedFromSerde,
-  serializedFromSerde
-}
-import com.lightbend.kafka.scala.streams.StreamsBuilderS
-import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.{ KafkaStreams, Topology }
+import org.apache.kafka.streams.scala.StreamsBuilder
+import org.apache.kafka.streams.kstream.Materialized
+import org.apache.kafka.streams.scala.ImplicitConversions._
+import org.apache.kafka.streams.scala.serialization.Serdes.{longSerde, stringSerde}
+import org.apache.kafka.streams.{KafkaStreams, Topology}
 
 object WordCount extends App with TopologyDefinition {
 
@@ -26,7 +22,7 @@ object WordCount extends App with TopologyDefinition {
 
   override def createTopology() = {
     // 1. Get the streams builder
-    val builder = new StreamsBuilderS()
+    val builder = new StreamsBuilder()
 
     // 2. Create a source stream from the input topic
     //    The source stream is a `KStreamS` that is generating records from its source kafka topic (inputTopic)
@@ -49,9 +45,9 @@ object WordCount extends App with TopologyDefinition {
       .flatMapValues(value => value.split("\\W+"))
       // 3.3 Group by words
       .groupBy((_, value) => value)
-      // 3.4 Count and store the result into a KeyValueStore named "counts-store" as a KTableS
-      .count(countsStore, Some(Serdes.String()))
-      // 3.5 From the counts-store KTableS, start a stream into the output topic
+      // 3.4 Count and store the result into a KeyValueStore named "counts-store" as a KTable
+      .count()(Materialized.as(countsStore))
+      // 3.5 From the counts-store KTable, start a stream into the output topic
       .toStream
       .to(outputTopic)
 

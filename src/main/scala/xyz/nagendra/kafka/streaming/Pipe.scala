@@ -1,9 +1,9 @@
 package xyz.nagendra.kafka.streaming
 
-import com.lightbend.kafka.scala.streams.DefaultSerdes.stringSerde
-import com.lightbend.kafka.scala.streams.ImplicitConversions.{ consumedFromSerde, producedFromSerde }
-import com.lightbend.kafka.scala.streams.StreamsBuilderS
-import org.apache.kafka.streams.{ KafkaStreams, Topology }
+import org.apache.kafka.streams.scala.StreamsBuilder
+import org.apache.kafka.streams.{KafkaStreams, Topology}
+import org.apache.kafka.streams.scala.ImplicitConversions._
+import org.apache.kafka.streams.scala.serialization.Serdes.stringSerde
 
 object Pipe extends App with TopologyDefinition {
 
@@ -20,7 +20,7 @@ object Pipe extends App with TopologyDefinition {
 
   override def createTopology() = {
     // 1. Get the streams builder
-    val builder = new StreamsBuilderS()
+    val builder = new StreamsBuilder()
 
     // 2. Create a source stream from the input topic
     //    The source stream is a `KStreamS` that is generating records from its source kafka topic (inputTopic)

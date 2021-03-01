@@ -1,10 +1,13 @@
 package xyz.nagendra.kafka.streaming
 
-import com.lightbend.kafka.scala.streams.{ KStreamS, StreamsBuilderS }
-import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerConfig, ProducerRecord }
-import org.apache.kafka.common.serialization.{ IntegerSerializer, Serdes, StringSerializer }
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
+import org.apache.kafka.common.serialization.{IntegerSerializer, Serdes, StringSerializer}
 import org.apache.kafka.streams.kstream.Produced
-import org.apache.kafka.streams.{ Consumed, KafkaStreams, StreamsConfig, Topology }
+import org.apache.kafka.streams.scala.ImplicitConversions._
+import org.apache.kafka.streams.scala.StreamsBuilder
+import org.apache.kafka.streams.scala.kstream.KStream
+import org.apache.kafka.streams.scala.serialization.Serdes.{javaIntegerSerde, stringSerde}
+import org.apache.kafka.streams.{KafkaStreams, StreamsConfig, Topology}
 
 import java.util.Properties
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -34,12 +37,12 @@ object EvenOddBranch extends App with TopologyDefinition {
 
   override def createTopology() = {
     // 1. Get the streams builder
-    val builder = new StreamsBuilderS()
+    val builder = new StreamsBuilder()
 
     // 2. Create a source stream from the input topic
     //    The source stream is a `KStreamS` that is generating records from its source kafka topic (inputTopic)
     //    The records are organized as (Integer, String) key-value pairs
-    val source = builder.stream[Integer, String](inputTopic)(Consumed.`with`(Serdes.Integer(), Serdes.String()))
+    val source = builder.stream[Integer, String](inputTopic)
 
     // 3. Branch out to two different stream processing branches (even and odd) based on Integer key
     val branches = source.branch(
@@ -65,7 +68,7 @@ object EvenOddBranch extends App with TopologyDefinition {
     builder.build()
   }
 
-  private def processBranch(branchStream: KStreamS[Integer, String],
+  private def processBranch(branchStream: KStream[Integer, String],
                             processorFn: String => String,
                             peekFn: (Integer, String) => Unit,
                             outputTopic: String
