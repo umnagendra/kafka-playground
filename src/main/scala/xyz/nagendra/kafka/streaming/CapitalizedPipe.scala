@@ -7,9 +7,9 @@ import org.apache.kafka.streams.scala.serialization.Serdes.stringSerde
 
 object CapitalizedPipe extends App with TopologyDefinition {
 
-  val appId       = "streams-capitalized-pipe"
-  val inputTopic  = "streams-plaintext-input"
-  val outputTopic = "streams-pipe-output"
+  lazy val appId       = "streams-capitalized-pipe"
+  lazy val inputTopic  = "streams-plaintext-input"
+  lazy val outputTopic = "streams-pipe-output"
 
   // Examine the topology created above
   val topology: Topology = createTopology()
