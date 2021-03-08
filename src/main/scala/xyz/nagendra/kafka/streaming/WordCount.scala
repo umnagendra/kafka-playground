@@ -8,10 +8,10 @@ import org.apache.kafka.streams.{KafkaStreams, Topology}
 
 object WordCount extends App with TopologyDefinition {
 
-  val appId       = "streams-word-count"
-  val inputTopic  = "streams-plaintext-input"
-  val outputTopic = "streams-word-count"
-  val countsStore = "counts-store"
+  lazy val appId       = "streams-word-count"
+  lazy val inputTopic  = "streams-plaintext-input"
+  lazy val outputTopic = "streams-word-count"
+  lazy val countsStore = "counts-store"
 
   // Examine the topology created above
   val topology: Topology = createTopology()

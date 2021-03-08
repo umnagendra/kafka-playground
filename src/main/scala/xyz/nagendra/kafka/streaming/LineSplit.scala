@@ -7,9 +7,9 @@ import org.apache.kafka.streams.scala.serialization.Serdes.stringSerde
 
 object LineSplit extends App with TopologyDefinition {
 
-  val appId       = "streams-line-split"
-  val inputTopic  = "streams-plaintext-input"
-  val outputTopic = "streams-words"
+  lazy val appId       = "streams-line-split"
+  lazy val inputTopic  = "streams-plaintext-input"
+  lazy val outputTopic = "streams-words"
 
   // Examine the topology created above
   val topology: Topology = createTopology()
