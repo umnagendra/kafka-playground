@@ -57,7 +57,7 @@ object EvenOddBranch extends App with TopologyDefinition {
                   outputTopicEven
     )
 
-    // 4.2 Process the events in even branch (all values in lowercase)
+    // 4.2 Process the events in odd branch (all values in lowercase)
     processBranch(branches(1),
                   value => value.toLowerCase(),
                   (key, value) => println(s"ODD BRANCH:\t${key} -> ${value}"),
