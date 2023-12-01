@@ -34,6 +34,8 @@ object CapitalizedPipe extends App with TopologyDefinition {
     builder.build()
   }
 
+  println("This is a test change")
+
   // The program will run until it is aborted.
   // Execute a shutdown hook to close the stream before shutting down the app.
   sys.addShutdownHook(() => Util.closeStream(streams))
